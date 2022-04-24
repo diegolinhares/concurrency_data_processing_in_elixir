@@ -1,6 +1,12 @@
 defmodule Sender do
   @max_concurrency 2
 
+  # It makes the task raise an error to test the supervisor
+  # Without the supervisor the other tasks will be blocked
+  def send_email("georgeclooney@movies.com" = email) do
+    raise "Couldn't send email to #{email}"
+  end
+
   def send_email(email) do
     Process.sleep(300)
     IO.puts("Email sent to #{email}")
@@ -13,8 +19,8 @@ defmodule Sender do
 
   # We can kill the process by sending a kill signal using the option: on_timeout: :kill_task.
   def notify_all(emails) do
-    emails
-    |> Task.async_stream(&send_email/1, max_concurrency: @max_concurrency, ordered: false)
+    Sender.EmailTaskSupervisor
+    |> Task.Supervisor.async_stream_nolink(emails, &send_email/1)
     |> Enum.to_list()
   end
 end
