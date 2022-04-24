@@ -1,11 +1,5 @@
 defmodule Sender do
-  @max_concurrency 2
-
-  # It makes the task raise an error to test the supervisor
-  # Without the supervisor the other tasks will be blocked
-  def send_email("georgeclooney@movies.com" = email) do
-    raise "Couldn't send email to #{email}"
-  end
+  def send_email("georgeclooney@movies.com" = _email), do: :error
 
   def send_email(email) do
     Process.sleep(300)
