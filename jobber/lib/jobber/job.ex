@@ -6,6 +6,10 @@ defmodule Jobber.Job do
 
   defstruct [:work, :id, :max_retries, retries: 0, status: "new"]
 
+  def start_link(args) do
+    GenServer.start_link(__MODULE__, args)
+  end
+
   def init(args) do
     work = Keyword.fetch!(args, :work)
     id = Keyword.get(args, :id, random_job_id())
@@ -57,6 +61,6 @@ defmodule Jobber.Job do
 
   defp random_job_id do
     :crypto.strong_rand_bytes(5)
-      |> Base.url_encode64(padding: false)
+    |> Base.url_encode64(padding: false)
   end
 end
