@@ -1,5 +1,6 @@
 defmodule Jobber.Job do
-  use GenServer
+  # Tells supervisor not to restart the process if is exiting normally.
+  use GenServer, restart: :transient
   require Logger
 
   alias Jobber.Job
